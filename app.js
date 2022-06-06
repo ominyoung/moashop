@@ -21,21 +21,28 @@ app.use(expressLayouts);
 //=== 데이터베이스 연결 ===//
 
 // 몽고디비 모듈 사용
-var MongoClient = require('mongodb').MongoClient;
-// 데이터베이스
-var database;
+// var MongoClient = require('mongodb').MongoClient;
+// // 데이터베이스
+// var database;
+// var databaseUrl = 'mongodb://localhost:27017/moashop';
 
-function connectDB(){
-    var databaseUrl = 'mongodb://localhost:27017/moashop';
+// MongoClient.connect(databaseUrl, function(err, db){
+//     if(err) throw err;
 
-    MongoClient.connect(databaseUrl, function(err, db){
-        if(err) throw err;
+//     console.log('데이터베이스에 연결되었습니다. : '+ databaseUrl);
 
-        console.log('데이터베이스에 연결되었습니다. : '+ databaseUrl);
-
-        database = db;
-    })
-}
+//      database = db;
+// })
+var mongoose = require('mongoose');
+var url = 'mongodb://localhost:27017/moashop';
+mongoose.connect(url);
+var db = mongoose.connection;
+db.on('error', function(err) {
+   console.log('Error : ', err);
+});
+db.on('open', function() {
+   console.log('Open Event');
+});
 
 
 
@@ -58,10 +65,10 @@ app.get('/outfit/update',(req, res)=>{
 })
 
 //API
-app.post("/api/users",controller.create);
-app.get("/api/users",controller.find);
-app.put("/api/users/:id",controller.update);
-app.delete("/api/users/:id",controller.delete);
+app.post("/api/outfits",controller.create);
+app.get("/api/outfits",controller.find);
+app.put("/api/outfits/:id",controller.update);
+app.delete("/api/outfits/:id",controller.delete);
 
 // 정적 파일
 app.use('/css',express.static(path.resolve(__dirname,"static/css")))
