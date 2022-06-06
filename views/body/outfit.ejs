@@ -16,17 +16,39 @@
             </tr>
         </thead>
         <tbody>
+            <% for (var i=0;i<outfits.length;i++) {%>
             <tr>
-                <td>1</td>
-                <td>text</td>
-                <td>testtest</td>
-                <td>testtesttesttest</td>
-                <td>1.txt</td>
+                <td><%=i + 1 %></td>
+                <td><%=outfits[i].nickname %></td>
+                <td><%=outfits[i].title %></td>
+                <td><%=outfits[i].content %></td>
+                <td><%=outfits[i].file %></td>
                 <td>
-                    <a href="/outfit/update">수정</a>
-                    <a href="#">삭제</a>
+                    <a href="/outfit/update?id=<%=outfits[i]._id%>">수정</a>
+                    <a href="#" id="delete" class="btn delete" data-id="<%=outfits[i]._id%>">삭제</a>
                 </td>
             </tr>
+            <%} %>
         </tbody>
     </table>
 </form>
+
+<script>
+    $('.table tbody td a.delete').click(function(){
+        var id = $(this).attr("data-id")
+        console.log(id)
+
+        var request = {
+            "url":`http://localhost:3000/api/outfits/${id}`,
+            "method":"DELETE",
+        }
+
+        if(confirm("데이터를 삭제하시겠습니까?")){
+            $.ajax(request).done(function(response){
+                alert("데이터를 삭제했습니다.")
+                location.reload();
+            })
+        }
+    })
+
+</script>

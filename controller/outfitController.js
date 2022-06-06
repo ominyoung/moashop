@@ -17,7 +17,8 @@ exports.create = (req,res)=>{
     outfit
         .save(outfit)
         .then(data => {
-            res.send(data)
+            //res.send(data)
+            res.redirect('/outfit/add')
         })
         .catch(err=>{
             res.status(500)
@@ -25,13 +26,31 @@ exports.create = (req,res)=>{
 }
 
 exports.find = (req,res)=>{
-    Outfit.find()
+    if(req.query.id){
+        const id = req.query.id;
+
+        Outfit.findById(id)
+            .then(outfit =>{
+                if(!outfit){
+                    res.status(404).send({message: `Cannot find ${id}`})
+                }else{
+                    res.send(outfit)
+                }
+            })
+            .catch(err=>{
+                res.status(500)
+            })
+
+    }else{
+        Outfit.find()
         .then(outfit =>{
             res.send(outfit)
         })
         .catch(err=>{
             res.status(500)
         })
+    }
+    
 }
 
 exports.update = (req,res)=>{

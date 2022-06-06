@@ -3,27 +3,51 @@
     <h1>코디 수정</h1>
 </center>
 
-<form action="" method="POST">
+<form action="" method="POST" id="update">
     <div class="container">
         <div class="form-group">
             <label for="nickname">Nickname</label>
-            <input type="hidden" name="id" value="">
-            <input type="text" name="nickname" value="">
+            <input type="hidden" name="id" value="<%= outfit._id %>">
+            <input type="text" name="nickname" value="<%= outfit.nickname %>">
         </div>
         <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" name="title" value="">
+            <input type="text" name="title" value="<%= outfit.title %>">
         </div>
         <div class="form-group">
             <label for="content">Content</label>
-            <input type="text" name="content" value="">
+            <input type="text" name="content" value="<%= outfit.content %>">
         </div>
         <hr>
         <div class="form-group">
             <label for="file">파일</label>
-            <input type="file" name="file" value="">
+            <input type="file" name="file" value="<%= outfit.file %>">
         </div>
         <button class="" type="submit">수정 완료</button>
     </form>
     </div>
 </form>
+<script>
+    $("#update").submit(function(event){
+        event.preventDefault();
+
+        var unindexed_array = $(this).serializeArray();
+        var data = {}
+
+        $.map(unindexed_array,function(n,i){
+            data[n['name']] = n['value']
+        })
+
+        console.log(data);
+
+        var request = {
+            "url":`http://localhost:3000/api/outfits/${data.id}`,
+            "method":"PUT",
+            "data":data,
+        }
+
+        $.ajax(request).done(function(response){
+            alert("update done!");
+        })
+    })
+</script>

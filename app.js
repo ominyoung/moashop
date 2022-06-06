@@ -2,6 +2,7 @@ const expressLayouts = require('express-ejs-layouts');
 const express = require('express');
 const bodyparser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
 const controller = require('./controller/outfitController');
@@ -17,6 +18,8 @@ app.set('views',__dirname + '/views');
 app.set('layout','index');
 
 app.use(expressLayouts);
+//CORS 허용
+app.use(cors())
 
 //=== 데이터베이스 연결 ===//
 
@@ -45,7 +48,7 @@ db.on('open', function() {
 });
 
 
-
+const axios = require('axios');
 // 메인페이지
 app.get('/',(req, res)=>{
     res.render('body/home');
@@ -53,7 +56,14 @@ app.get('/',(req, res)=>{
 
 // 코디 리스트
 app.get('/outfit',(req, res)=>{
-    res.render('body/outfit');
+    axios.get('http://localhost:3000/api/outfits')
+        .then(function(response){
+            console.log(response)
+            res.render('body/outfit',{outfits:response.data});
+        })
+        .catch(err =>{
+            res.send(err);
+        })
 })
 // 코디 추가
 app.get('/outfit/add',(req, res)=>{
@@ -61,7 +71,13 @@ app.get('/outfit/add',(req, res)=>{
 })
 // 코디 수정
 app.get('/outfit/update',(req, res)=>{
-    res.render('body/updateOutfit');
+    axios.get('http://localhost:3000/api/outfits',{params:{id:req.query.id}})
+        .then(function(outfit){
+            res.render('body/updateOutfit',{outfit:outfit.data})
+        })
+        .catch(err => {
+            res.send(err);
+        })
 })
 
 //API
