@@ -5,7 +5,8 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const controller = require('./controller/outfitController');
+const o_controller = require('./controller/outfitController');
+const m_controller = require('./controller/mainController');
 // 포트 번호
 const port = 3000;
 
@@ -54,6 +55,54 @@ app.get('/',(req, res)=>{
     res.render('body/home');
 })
 
+// 10대 페이지
+app.get('/tenoutfit/10',(req, res)=>{
+    axios.get('http://localhost:3000/api/main')
+        .then(function(response){
+            console.log(response)
+            res.render('body/tenoutfit',{outfits:response.data});
+        })
+        .catch(err =>{
+            res.send(err);
+        })
+})
+// 20대 페이지
+app.get('/twentyoutfit/20',(req, res)=>{
+    axios.get('http://localhost:3000/api/main')
+        .then(function(response){
+            console.log(response)
+            res.render('body/twentyoutfit',{outfits:response.data});
+        })
+        .catch(err =>{
+            res.send(err);
+        })
+})
+// 30대 페이지
+app.get('/thirtyoutfit/30',(req, res)=>{
+    axios.get('http://localhost:3000/api/main')
+        .then(function(response){
+            console.log(response)
+            res.render('body/thirtyoutfit',{outfits:response.data});
+        })
+        .catch(err =>{
+            res.send(err);
+        })
+})
+
+// 전체 리스트
+app.get('/alloutfit',(req, res)=>{
+    axios.get('http://localhost:3000/api/main')
+        .then(function(response){
+            console.log(response)
+            res.render('body/alloutfit',{outfits:response.data});
+        })
+        .catch(err =>{
+            res.send(err);
+        })
+})
+
+
+
 // 코디 리스트
 app.get('/outfit',(req, res)=>{
     axios.get('http://localhost:3000/api/outfits')
@@ -80,11 +129,16 @@ app.get('/outfit/update',(req, res)=>{
         })
 })
 
-//API
-app.post("/api/outfits",controller.create);
-app.get("/api/outfits",controller.find);
-app.put("/api/outfits/:id",controller.update);
-app.delete("/api/outfits/:id",controller.delete);
+//outfit API
+app.post("/api/outfits",o_controller.create);
+app.get("/api/outfits",o_controller.find);
+app.put("/api/outfits/:id",o_controller.update);
+app.delete("/api/outfits/:id",o_controller.delete);
+//main API
+app.post("/api/main",m_controller.create);
+app.get("/api/main",m_controller.find);
+app.put("/api/main/:id",m_controller.update);
+app.delete("/api/main/:id",m_controller.delete);
 
 // 정적 파일
 app.use('/css',express.static(path.resolve(__dirname,"static/css")))
